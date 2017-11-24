@@ -6,14 +6,6 @@ import glob
 # To read and show pgm files
 from skimage.io import imread, imshow
 
-import matplotlib.pyplot as plt
-%matplotlib inline
-%load_ext autoreload
-%autoreload 2
-%precision %.5f
-plt.rc('text', usetex=True)
-plt.rc('font',**{'family':'serif','serif':['Palatino']})
-
 def soft_thresholding(mat, epsilon):
     """
     Soft thresholding operator
@@ -68,7 +60,7 @@ IMG_DIR = "images/"
 INDIVIDUALS = ["yaleB01", "yaleB02", "yaleB03"]
 
 if __name__ == '__main__':
-	faces = {}
+    faces = {}
     for k in INDIVIDUALS:
         faces[k] = {}
         faces[k]['files'] = glob.glob(IMG_DIR + k + "/" + k + "_P00A" + "*.pgm")
