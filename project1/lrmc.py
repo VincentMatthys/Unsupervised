@@ -7,12 +7,6 @@ import glob
 from skimage.io import imread, imshow
 
 import matplotlib.pyplot as plt
-%matplotlib inline
-%load_ext autoreload
-%autoreload 2
-%precision %.5f
-plt.rc('text', usetex=True)
-plt.rc('font',**{'family':'serif','serif':['Palatino']})
 
 def soft_thresholding(mat, epsilon):
     """
