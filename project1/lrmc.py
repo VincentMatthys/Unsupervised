@@ -5,6 +5,8 @@ import glob
 
 # To read and show pgm files
 from skimage.io import imread, imshow
+import matplotlib.pyplot as plt
+
 
 def soft_thresholding(mat, epsilon):
     """
