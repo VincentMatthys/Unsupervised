@@ -13,15 +13,6 @@ from error_evaluation import evaluate_error
 
 epsilon = 1e-3
 
-
-def S_Shrinkage(Matrix,tau):
-
-    sign = lambda x : -1 if (x<0) else 1
-    shrink = lambda m: sign(m)*max(abs(m)-tau,0)
-    shrink_vect = np.vectorize(shrink)
-
-    return shrink_vect(Matrix)
-
 def soft_thresholding(mat, epsilon):
     """
     Soft thresholding operator
@@ -96,37 +87,3 @@ def SSC(data,n,tau,mu2):
     kmeans = KMeans(n_clusters = n, init = 'random').fit(Y.T)
 
     return C,kmeans.labels_
-
-
-# mat = loadmat('ExtendedYaleB.mat')
-# data = mat['EYALEB_DATA']
-# true_label = mat['EYALEB_LABEL']
-# data = np.array(data, dtype = np.int64)
-# true_label = true_label[:,:128]
-#
-# data=data[:,0:128]
-# N=data.shape[1]
-# D=data.shape[0]
-#
-# #compute mu_min
-#
-# l=np.zeros((N,N))
-# mu_list = np.zeros((N,1))
-# for i in range(N):
-#     for j in range(N) :
-#         l[i,j] = np.dot(data[:,i].transpose(), data[:,j])
-# np.fill_diagonal(l,0)
-#
-# for i in range(N):
-#     mu_list[i,0] = max(l[i,:])
-#
-# maxmin = min(mu_list)
-#
-# mu2 = 20
-# tau = 1e-5
-#
-#
-# C_m, eval_label = SSC(data,2,tau,mu2)
-# true_label= true_label-1
-# true_label= true_label.reshape(-1)
-# error= evaluate_error(eval_label,true_label)
