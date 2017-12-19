@@ -13,12 +13,29 @@ from scipy.io import loadmat
 from error_evaluation import evaluate_error
 
 
-epsilon = 1e-1
+epsilon = 1e-3
 
 
 def ksubspaces(data, n , d, replicates):
-    N = data.shape[1]
+    """
+    K-subspaces algorithm
+
+    Parameters:
+    ------------
+    data:       array, shape [D, N]
+                data matrix, N examples of dimension D
+    n:          postive integer
+                number of subspaces
+    d:          list, array-like, shape (n,)
+                dimension of subpsaces
+    replicates: number of restarts
+
+    Returns:
+    --------
+
+    """
     D = data.shape[0]
+    N = data.shape[1]
 
     err = []
     for r in range(replicates) :
@@ -28,7 +45,6 @@ def ksubspaces(data, n , d, replicates):
             mu[i,:]= data[:,np.random.randint(0,N)]
 
          mu_prev = np.ones(mu.shape)
-
 
 
         ### randomly selecting U
@@ -42,7 +58,7 @@ def ksubspaces(data, n , d, replicates):
 
          print('mu Error : ' , np.linalg.norm(mu-mu_prev) , 'U error', np.linalg.norm(U-U_prev))
 
-         while (np.linalg.norm(mu-mu_prev)>epsilon or np.linalg.norm(U-U_prev)>epsilon ):
+         while (np.linalg.norm(mu-mu_prev) / (epsilon + np.linalg.norm(mu)) > epsilon or np.linalg.norm(U-U_prev) / (epsilon + np.linalg.norm(U)) > epsilon ):
 
             U_prev = U
             #U = np.zeros((n,D,int(d[0])))
@@ -92,7 +108,7 @@ def ksubspaces(data, n , d, replicates):
          if (error_cur == min(np.array(err))):
              w_opt = w
              mu_opt = mu
-             U_opt =U
+             U_opt = U
              y_opt = y
 
     print (err)
