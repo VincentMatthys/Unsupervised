@@ -1,8 +1,5 @@
 import numpy as np
 
-epsilon = 1e-3
-
-
 def ksubspaces(data, n , d, replicates, verbose = False):
     """
     K-subspaces algorithm

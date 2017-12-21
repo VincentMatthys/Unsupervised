@@ -4,7 +4,6 @@
 # For Kmeans algorithm
 from sklearn.cluster import KMeans
 import numpy as np
-import matplotlib.pyplot as plt
 
 def gaussian_affinity(X, k, sigma, distance_matrix = None):
     """

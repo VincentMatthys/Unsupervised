@@ -2,8 +2,6 @@
 import numpy as np
 import scipy
 from sklearn.cluster import KMeans
-from scipy.io import loadmat
-from error_evaluation import evaluate_error
 
 
 def soft_thresholding(mat, threshold):
