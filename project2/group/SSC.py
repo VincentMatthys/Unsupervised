@@ -1,89 +1,143 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 12 22:44:23 2017
-
-@author: Pirashanth
-"""
-
 import numpy as np
 import scipy
 from sklearn.cluster import KMeans
 from scipy.io import loadmat
 from error_evaluation import evaluate_error
 
-epsilon = 1e-3
 
-def soft_thresholding(mat, epsilon):
+def soft_thresholding(mat, threshold):
     """
     Soft thresholding operator
     Proximal operator of the L1 norm
-    :param mat: matrix to threshold
-    :param epsilon: value of threshold
-    :return mat: thresholded matrix
+
+    Parameters:
+    -----------
+    :param mat:     array-like
+                    matrix to threshold
+    :param threshold: real value
+                    value of threshold
+
+    Returns:
+    --------
+    mat:            array-like
+                    thresholded matrix
     """
 
-    mat[np.abs(mat) < epsilon] = 0
-    mat[mat > epsilon] -= epsilon
-    mat[mat < -epsilon] += epsilon
+    mat[np.abs(mat) < threshold] = 0
+    mat[mat > threshold] -= threshold
+    mat[mat < -threshold] += threshold
 
     return mat
 
 
-def compute_sparse_C(data,tau,mu2, verbose = False):
-    global epsilon
-    C = np.zeros((data.shape[1],data.shape[1]))
-    lambda2 = np.zeros((data.shape[1],data.shape[1]))
-    C_previous = np.inf * np.ones((data.shape[1],data.shape[1]))
-    lambda2previous = np.inf * np.ones((data.shape[1],data.shape[1]))
-    Z_previous = np.inf * np.ones((data.shape[1],data.shape[1]))
-    Z = np.zeros((data.shape[1],data.shape[1]))
+def compute_sparse_C(data, tau, mu2, verbose = False, epsilon = 1e-3):
+    """
+    Matrix LASSO Minimization by ADMM
 
+    Parameters:
+    -----------
+    data:    array, shape[D, N]
+             data matrix, N examples of dimension D
+    tau:     positive real
+             penalisation of errors for the sparse representation
+    mu2:     postive real
+             parameter of the augmented Lagrangian method
+    verbose: boolean
+             level of verbosity
 
-    Z_1 = np.linalg.inv(tau*np.dot(data.transpose(),data)+ mu2*np.eye(data.shape[1]))
+    Returns:
+    --------
+    C:       array, shape[N, N]
+             robust sparse representation of data
+    """
+    N = data.shape[1]
 
-    while (np.linalg.norm(C-C_previous) / (epsilon + np.linalg.norm(C)) >epsilon or np.linalg.norm(Z-Z_previous) / (epsilon + np.linalg.norm(Z))>epsilon):
+    # Crate C and lagrange multipliers
+    C = np.zeros((N, N))
+    lambda2 = np.zeros((N, N))
+    Z = np.zeros((N, N))
 
+    # Create same matrices to compare at previous stage
+    C_previous = np.inf * np.ones((N, N))
+    lambda2previous = np.inf * np.ones((N, N))
+    Z_previous = np.inf * np.ones((N, N))
+
+    # Invariant (left) part of the Z-update
+    Z_1 = np.linalg.inv(tau * np.dot(data.T, data) + mu2 * np.eye(N))
+
+    while (np.linalg.norm(C-C_previous) / (epsilon + np.linalg.norm(C)) \
+    >epsilon \
+    or np.linalg.norm(Z-Z_previous) / (epsilon + np.linalg.norm(Z))>epsilon):
+
+        # Update previous matrices
         C_previous = np.array(C)
         Z_previous = np.array(Z)
         lambda2previous = np.array(lambda2)
 
-
+        # Right part of the Z-update
         Z_2 = tau * np.dot(data.transpose(),data) + mu2*(C-lambda2/mu2)
-        Z = np.dot(Z_1,Z_2)
+        # Update Z
+        Z = np.dot(Z_1, Z_2)
 
-        # C = S_Shrinkage(Z+lambda2/mu2,1/mu2)
-        ## %lprun -f  compute_sparse_C T = SSC(motion_data[key]["data"], motion_data[key]["s"].max() + 1, 1e7, 1e3) => 115s 99% S_Shrinkage
-        C = soft_thresholding(Z+lambda2/mu2,1/mu2)
-        ## %lprun -f  compute_sparse_C T = SSC(motion_data[key]["data"], motion_data[key]["s"].max() + 1, 1e7, 1e3) => 7.68323 s 25% S_Shrinkage
-        np.fill_diagonal(C,0)
+        # Update C
+        C = soft_thresholding(Z + lambda2 / mu2, 1 / mu2)
+        np.fill_diagonal(C, 0)
 
-        lambda2 = lambda2 + mu2*(Z-C)
+        # Update Lambda2
+        lambda2 = lambda2 + mu2 * (Z - C)
 
         if verbose:
-            print(np.linalg.norm(C-C_previous),np.linalg.norm(Z-Z_previous),np.linalg.norm(lambda2-lambda2previous))
-
+            # Show current error data - data.dot(C)
+            print("Current error:\n{}"\
+            .format(np.linalg.norm(data - data.dot(C)))
 
     return C
 
 
-def SSC(data,n,tau,mu2):
-    C = compute_sparse_C(data,tau,mu2)
+def SSC(data, n, tau, mu2, verbose = False):
+    """
+    Sparse Subspace algorithm
 
+    From : algorithm 8.5
+    Vidal, René, Yi Ma, and S. Shankar Sastry. "Principal Component Analysis." Generalized Principal Component Analysis. Springer New York, 2016
+
+    Parameters:
+    -----------
+    data:    array, shape[D, N]
+             data matrix, N examples of dimension D
+    n:       positive integer
+             number of subspaces
+    tau:     positive real
+             penalisation of errors for the sparse representation
+    mu2:     postive real
+             parameter of the augmented Lagrangian method
+    verbose: boolean
+             level of verbosity
+
+    Returns:
+    --------
+    C:       array, shape[N, N]
+             robust sparse representation of data
+    groups:  array-like, shape (N,)
+             labels (between 0 and n-1) of each point
+    """
+    # Compute robust sparse representation of data
+    C = compute_sparse_C(data, tau, mu2)
+
+    # Compute affinity matrix
     W = np.abs(C) + np.abs(C.transpose())
 
+    # Compute D and L associated to graph
     D = np.diag(W.sum(axis = 1))
     L = D - W
 
+    if verbose:
+        print (D)
 
-    print (D)
-    D_1_2= np.linalg.inv(scipy.linalg.sqrtm(D))
+    # Normalized spectral clustering
+    D_root = np.linalg.inv(scipy.linalg.sqrtm(D))
+    _, evectors = np.linalg.eigh(np.dot(np.dot(D_root, L), D_root))
+    kmeans = KMeans(n_clusters = n, init = 'random').fit(evectors[:, :n])
 
-    transform_L= np.dot(np.dot(D_1_2,L),D_1_2)
-    evalues, evectors = np.linalg.eigh(transform_L)
-
-
-    Y = evectors[:, :n].T
-
-    kmeans = KMeans(n_clusters = n, init = 'random').fit(Y.T)
-
-    return C,kmeans.labels_
+    return C, kmeans.labels_
