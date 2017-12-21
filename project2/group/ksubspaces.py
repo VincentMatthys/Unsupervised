@@ -1,6 +1,6 @@
 import numpy as np
 
-def ksubspaces(data, n , d, replicates, verbose = False):
+def ksubspaces(data, n , d, replicates, verbose = False, epsilon = 1e-3):
     """
     K-subspaces algorithm
 
@@ -18,15 +18,17 @@ def ksubspaces(data, n , d, replicates, verbose = False):
     replicates:     number of restarts
     verbose:        boolean
                     level of verbosity
+    epsilon:		positive real
+                    Parameter for stop condition
 
     Returns:
     --------
     global_groups:  list:
-                      - array, shape [n, N]
-                        segmentation of of the data
                       - array-like, shape (N,)
                         segmentation of the data in n groups,
                         labels (between 0 and n-1) for each point
+                      - array, shape [n, N]
+                        segmentation of of the data
     global_objects: list:
                       - list of U_i, subspace bases
                       - array of mus, subspace barycenters
@@ -102,5 +104,5 @@ def ksubspaces(data, n , d, replicates, verbose = False):
     y = [trace[best]["U"][pos[j]].T.dot(data[:,j] - mu[:, pos[j]]) for j in range(N)]
 
 
-    return (trace[best]["w"],
-        trace[best]["w"].argmax(0)), [trace[best]["U"], trace[best]["mu"], y]
+    return (trace[best]["w"].argmax(0), trace[best]["w"]),
+            [trace[best]["U"], trace[best]["mu"], y]
