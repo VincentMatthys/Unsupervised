@@ -49,7 +49,7 @@ def ksubspaces(data, n , d, replicates, verbose = False, epsilon = 1e-3):
 
         ## randomly selecting U
         U = [np.random.randn(D, d_u) for d_u in d]
-        U_norm = [u / np.linalg.norm(u, axis = 1, keepdims = True) for u in U]
+        U_norm = [u / np.linalg.norm(u, axis = 0, keepdims = True) for u in U]
 
         ## Previous state of mu and U (subspaces parameters)
         U_prev = [np.inf * np.ones((D, d_u)) for d_u in d]
@@ -104,5 +104,5 @@ def ksubspaces(data, n , d, replicates, verbose = False, epsilon = 1e-3):
     y = [trace[best]["U"][pos[j]].T.dot(data[:,j] - mu[:, pos[j]]) for j in range(N)]
 
 
-    return (trace[best]["w"].argmax(0), trace[best]["w"]),
+    return (trace[best]["w"].argmax(0), trace[best]["w"]),\
             [trace[best]["U"], trace[best]["mu"], y]
