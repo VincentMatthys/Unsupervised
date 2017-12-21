@@ -89,8 +89,8 @@ def compute_sparse_C(data, tau, mu2, verbose = False, epsilon = 1e-3):
 
         if verbose:
             # Show current error data - data.dot(C)
-            print("Current error:\n{}"\
-            .format(np.linalg.norm(data - data.dot(C)))
+            print("Current error: {:.5e}"\
+            .format(np.linalg.norm(data - data.dot(C))))
 
     return C
 
@@ -99,7 +99,7 @@ def SSC(data, n, tau, mu2, verbose = False):
     """
     Sparse Subspace algorithm
 
-    From : algorithm 8.5
+    Inspired from : algorithm 8.5
     Vidal, René, Yi Ma, and S. Shankar Sastry. "Principal Component Analysis." Generalized Principal Component Analysis. Springer New York, 2016
 
     Parameters:
@@ -123,7 +123,7 @@ def SSC(data, n, tau, mu2, verbose = False):
              labels (between 0 and n-1) of each point
     """
     # Compute robust sparse representation of data
-    C = compute_sparse_C(data, tau, mu2)
+    C = compute_sparse_C(data, tau, mu2, verbose = verbose)
 
     # Compute affinity matrix
     W = np.abs(C) + np.abs(C.transpose())
