@@ -36,7 +36,7 @@ def minWeightBipartiteMatching_2(clusteringA, clusteringB):
     _, result = linear_sum_assignment(assignmentMatrix)
     return result
 
-def evaluate_error(predictions, ground_truth):
+def evaluate_error(predictions, ground_truth, verbose = False):
     """
     Evaluate error for all possible permuatations of n letters
     -----------------------------------------------------------------------------------
@@ -71,5 +71,6 @@ def evaluate_error(predictions, ground_truth):
     error = (mapped_pred != ground_truth).sum() / len(ground_truth)
 
     # To do : plot confusion matrix
-    print ("Erreur : {}".format(error))
+    if verbose:
+        print ("Erreur : {}".format(error))
     return error

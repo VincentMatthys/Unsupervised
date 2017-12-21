@@ -97,8 +97,12 @@ def ksubspaces(data, n , d, replicates, verbose = False, epsilon = 1e-3):
         trace[r]["error"] = np.linalg.norm(w*distance)
 
 
-    for r in range(replicates):
-        best = min(trace, key = lambda k: trace[k]["error"])
+    # Select best replicate
+    best = min(trace, key = lambda k: trace[k]["error"])
+
+    if verbose:
+        print("Best replicate {} with error {}"\
+        .format(best, trace[best]["error"]))
 
     pos = trace[best]["w"].argmax(0)
     y = [trace[best]["U"][pos[j]].T.dot(data[:,j] - mu[:, pos[j]]) for j in range(N)]
