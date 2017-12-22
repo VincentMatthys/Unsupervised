@@ -79,6 +79,6 @@ def SC(W, n):
     # 3. Cluster the points {y_j}_1^N into n groups using the K-means algorithm
     ## n_jobs controls the number of threads
     ## init with random as in algorithm 4.4
-    kmeans = KMeans(n_clusters = n, init = 'random').fit(evectors[:, :n].T)
+    kmeans = KMeans(n_clusters = n, init = 'random').fit(evectors[:, :n])
     # Return the label for each point
     return kmeans.labels_
