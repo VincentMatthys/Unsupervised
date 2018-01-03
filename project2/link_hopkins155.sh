@@ -18,7 +18,6 @@ do
 			directory_MLE=$(echo $i| cut -f 1 -d $'\t')
 		fi
 	fi
-	echo "Testing"
 done
 # Typical size of rqw Hopkins155 is 30Mo
 if [[ $max_size -ge 30000000 ]]
@@ -27,5 +26,5 @@ then
 	echo "A symbolic will be created in data/Hopkins155 to ${directory_MLE/./$PWD}"
 	ln -s ${directory_MLE/./$PWD} data/Hopkins155
 else
-	echo "You may not have properly download Hopkins155 dataset yet. Please report to subsection Download in the README"
+	echo "You may not have properly downloaded Hopkins155 dataset yet. Please report to subsection Download in the README"
 fi
