@@ -53,7 +53,7 @@ bash tools/link_hopkins155.sh
 
 ### Motion segmentation
 
-![Motion segmentation results](images/res_motion_segmentation.png)
+![Motion segmentation results](report/images/auc_compare.png)
 
 
 ## Bilbiography
