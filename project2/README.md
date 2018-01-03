@@ -8,13 +8,13 @@ Second project given as part of the following course: *Unsupervised learning*, f
 
 Consider the problem of clustering face images of multiple individuals acquired with a fixed pose and varying illumination. The goal is to cluster the faces, each of one belonging to a given individual, as shown in the following figure, extracted from _Vidal et al, 2016_
 
-![Face clustering example](face_clustering.png)
+![Face clustering example](images/face_clustering.png)
 
 ### Motion segmentation
 
 Consider a video sequence in which a camera observes n distinct points. The goal is to cluster the points, each of one have a relative motion, as shown in the following figure, extracted from _Vidal et al, 2016_:
 
-![Motion segmentation example](motion_segmentation.png)
+![Motion segmentation example](images/motion_segmentation.png)
 
 ## Data
 
@@ -38,14 +38,22 @@ You can now skip the following subsection to create symbolic links
 
 ### Creation of symbolic links
 
-If you already have downloaded or two of the datasets, you can create your own symbolic link, or use the corresponding `link_{extended_yale_b,hopkins155}.sh` script to properly create a fresh link in the required `data/` directory.
+If you already have downloaded or two of the datasets, you can create your own symbolic link, or use the corresponding `tools/link_{extended_yale_b,hopkins155}.sh` script to properly create a fresh link in the required `data/` directory.
 
 To use `link_hopkins155.sh`, just enter:
 ```
-bash link_hopkins155.sh
+bash tools/link_hopkins155.sh
 ```
 
 ## Results
+
+### Face clustering
+
+![Face clustering resultst](images/res_face_clustering.png)
+
+### Motion segmentation
+
+![Motion segmentation results](images/res_motion_segmentation.png)
 
 
 ## Bilbiography
