@@ -1,6 +1,20 @@
 # Face clustering and motion segmentation
 
-Project given as part of the following course: *Unsupervised learning*, fall 2017-2018, MSc MVA, ENS Paris-Saclay.
+Second project given as part of the following course: *Unsupervised learning*, fall 2017-2018, MSc MVA, ENS Paris-Saclay.
+
+## Introduction
+
+### Face clustering
+
+Consider the problem of clustering face images of multiple individuals acquired with a fixed pose and varying illumination. The goal is to cluster the faces, each of one belonging to a given individual, as shown in the following figure, extracted from _Vidal et al, 2016_
+
+![Face clustering example](face_clustering.png)
+
+### Motion segmentation
+
+Consider a video sequence in which a camera observes n distinct points. The goal is to cluster the points, each of one have a relative motion, as shown in the following figure, extracted from _Vidal et al, 2016_:
+
+![Motion segmentation example](motion_segmentation.png)
 
 ## Data
 
@@ -20,29 +34,25 @@ wget -O data/ExtendedYaleB.mat "http://www.vision.jhu.edu/gpca/fetchcode.php?id=
 wget -O data/Hopkins155 "http://www.vision.jhu.edu/data/fetchdata.php?id=1?Hopkins155.zip"
 ```
 
+You can now skip the following subsection to create symbolic links
+
 ### Creation of symbolic links
 
-If you have already download the Hopkins155 dataset, you can create your own symbolic link, or use the `create_link.sh` file as follow:
+If you already have downloaded or two of the datasets, you can create your own symbolic link, or use the corresponding `link_{extended_yale_b,hopkins155}.sh` script to properly create a fresh link in the required `data/` directory.
+
+To use `link_hopkins155.sh`, just enter:
 ```
-bash create_link.sh
+bash link_hopkins155.sh
 ```
 
-output=$(find . -name "*Hopkins155" 2> >(grep -v 'Permission denied' >&2))
-max_size=$(echo $output | cut -f 1 -d $'\n')
-for i in $(echo $output)
-do
-	cur_file_size=$(du -sb $i| cut -f 1 -d $'\t')
-	echo "size of $i : $cur_file_size"
-done
+## Results
 
 
+## Bilbiography
 
-output=$(find . -name "*Hopkins155" 2> >(grep -v 'Permission denied' >&2))
-max_size=$(echo $output | cut -f 1 -d $'\n')
-for i in $(echo $output)
-do
-	cur_file_size=$(du -b $i| cut -f 1 -d $'\t')
-	if [[ $cur_file_size -ge $max_size ]]; then
-		echo $cur_file_size
-	fi
-done
+@book{vidal2016PCA,
+	title={Generalized Principal Component Analysis},
+	author={Vidal, Ren{\'e} and Ma, Yi and Sastry, S Shankar},
+	year={2016},
+	publisher={Springer}
+}
