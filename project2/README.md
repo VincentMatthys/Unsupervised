@@ -2,6 +2,8 @@
 
 Second project given as part of the following course: *Unsupervised learning*, fall 2017-2018, MSc MVA, ENS Paris-Saclay.
 
+Team: Vincent MATTHYS, Pirashanth RATNAMOGAN, Othmane SAYEM
+
 ## Introduction
 
 ### Face clustering
