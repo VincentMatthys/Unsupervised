@@ -47,6 +47,8 @@ bash tools/link_hopkins155.sh
 
 ## Results
 
+You can find all results in the report provided with the repository in `report` directory. Here are extracted two figures from the `report/report.pdf` file:
+
 ### Face clustering
 
 ![Face clustering resultst](images/res_face_clustering.png)
