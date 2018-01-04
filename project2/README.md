@@ -6,6 +6,8 @@ Team: Vincent MATTHYS, Pirashanth RATNAMOGAN, Othmane SAYEM
 
 ## Introduction
 
+The instructions are given in `project2-cachan17.pdf`
+
 ### Face clustering
 
 Consider the problem of clustering face images of multiple individuals acquired with a fixed pose and varying illumination. The goal is to cluster the faces, each of one belonging to a given individual, as shown in the following figure, extracted from _Vidal et al, 2016_
